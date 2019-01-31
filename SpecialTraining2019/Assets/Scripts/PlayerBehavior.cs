@@ -35,4 +35,9 @@ public class PlayerBehavior : MonoBehaviour
         }
         rb.MovePosition(newPos);
     }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        Debug.Log("Triggered!");
+    }
 }
