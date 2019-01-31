@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBehavior : MonoBehaviour
+public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     //Vector2 speed = new Vector2(0, 0);
