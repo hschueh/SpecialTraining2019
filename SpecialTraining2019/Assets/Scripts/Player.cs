@@ -37,23 +37,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Vector2 posDiff = new Vector2();
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            posDiff.y += speedValue;
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            posDiff.y -= speedValue;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            posDiff.x -= speedValue;
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            posDiff.x += speedValue;
-        }
+        Vector2 posDiff = InputWrapper.getInstance().getMovement().normalized;
+        posDiff *= speedValue;
 
         if (posDiff.x > 0.05f)
             gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));

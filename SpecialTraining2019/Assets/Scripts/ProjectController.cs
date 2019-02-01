@@ -7,17 +7,24 @@ public class ProjectController : ITileCallback
     GameObject baseObject;
 
     int counter;
+    float widthRatio = 6.55f;
+    float heightRatio = 5.0f;
 
     public ProjectController(GameObject projectTile)
     {
         baseObject = projectTile;
         counter = 0;
+
+        Vector3 posBotLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        Vector3 posTopRight = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0));
+        widthRatio = (posTopRight.x - posBotLeft.x) / 2;
+        heightRatio = (posTopRight.y - posBotLeft.y) / 2;
     }
 
     public void StartProject()
     {
 
-        if (counter >= GameController.BULLET_LIMIT)
+        if (GameObject.FindGameObjectsWithTag("Projectile").Length >= GameController.BULLET_LIMIT)
         {
             return;
         }
@@ -40,8 +47,8 @@ public class ProjectController : ITileCallback
 
         tile.SetSpeed(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
 
-        init_x *= 6.55f;
-        init_y *= 5.0f;
+        init_x *= widthRatio;
+        init_y *= heightRatio;
 
         Debug.Log("StartProject: " + init_x + "  " + init_y);
 
