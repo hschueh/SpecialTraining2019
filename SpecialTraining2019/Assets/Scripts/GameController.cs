@@ -47,7 +47,15 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            StartGame();
+            if (gameStart == false)
+            {
+                StartGame();
+            }
+            else
+            {
+                // PauseGame();
+            }
+
         }
 
         if (gameStart == false)
@@ -80,10 +88,16 @@ public class GameController : MonoBehaviour
         score = 0;
     }
 
+    public void PauseGame()
+    {
+        // (TODO) change gameStart from bool to enum to describe state.
+    }
+
     public void GameOver()
     {
         Debug.Log("Game Over");
 
+        mainText.text = "Game over!! Score: " + score.ToString();
         gameStart = false;
     }
 
