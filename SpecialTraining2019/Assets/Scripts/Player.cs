@@ -8,29 +8,33 @@ public class Player : MonoBehaviour
     //Vector2 speed = new Vector2(0, 0);
     const float speedValue = 0.1f;
 
-    private bool prevState;
+    private bool shouldInit;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        prevState = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (GameController.getInstance().IsGameStart() == false)
+        // only when gameState == STATE_START, player can move
+        // when gameState become STATE_START, call MoveToInitPosition
+        if (GameController.getInstance().GetGameState() != GameController.STATE_START)
         {
-            prevState = true;
+            // START, STOP, PAUSE
+            if (GameController.getInstance().GetGameState() == GameController.STATE_STOP)
+            {
+                shouldInit = true;
+            }
             return;
         }
 
-        if (prevState == true)
+        if (shouldInit)
         {
-            prevState = false;
-            MoveToInitialPosition();
+            shouldInit = false;
+            MoveToInitPosition();
             return;
         }
 
@@ -57,7 +61,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (GameController.getInstance().IsGameStart() == false)
+        if (GameController.getInstance().GetGameState() != GameController.STATE_START)
         {
             return;
         }
@@ -66,7 +70,7 @@ public class Player : MonoBehaviour
         GameController.getInstance().GameOver();
     }
 
-    void MoveToInitialPosition()
+    void MoveToInitPosition()
     {
          rb.MovePosition(new Vector2(0, -2.5f));
     }

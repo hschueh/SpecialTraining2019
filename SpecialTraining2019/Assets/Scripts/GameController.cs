@@ -6,10 +6,15 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
 
+    public static int STATE_STOP = 0;
+    public static int STATE_START = 1;
+    public static int STATE_PAUSE = 2;
+    public static int STATE_DEAD = 3;
+
     public static GameController instance;
 
     public Text mainText;
-    private bool gameStart;
+    private int gameState;
     private int score;
 
     private ArrayList projectTileList;
@@ -37,7 +42,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         score = 0;
-        gameStart = false;
+        gameState = STATE_STOP;
 
         projectTileList = new ArrayList();
     }
@@ -47,25 +52,42 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            if (gameStart == false)
+            if (gameState == STATE_STOP)
             {
                 StartGame();
             }
-            else
+            else if (gameState == STATE_START)
             {
                 // PauseGame();
+            }
+            else if (gameState == STATE_PAUSE)
+            {
+                // ResumeGame();
             }
 
         }
 
-        if (gameStart == false)
+        if (gameState == STATE_STOP)
         {
+            // do nothing
             return;
+        } else if (gameState == STATE_START)
+        {
+            // create one bullet
+            CreateProjectile();
+
+            score++;
+            mainText.text = "Score: " + score.ToString();
+        } else if (gameState == STATE_PAUSE)
+        {
+            // do nothing
+            return;
+        } else if (gameState == STATE_DEAD)
+        {
+            GameOver();
         }
 
-        CreateProjectile();
-        score++;
-        mainText.text = "Score: " + score.ToString();
+
     }
 
     void CreateProjectile()
@@ -84,25 +106,32 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
-        gameStart = true;
+        Debug.Log("Start Game");
+        gameState = STATE_START;
         score = 0;
     }
 
     public void PauseGame()
     {
-        // (TODO) change gameStart from bool to enum to describe state.
+        Debug.Log("Pause Game");
+        gameState = STATE_PAUSE;
+    }
+
+    public void ResumeGame()
+    {
+        Debug.Log("Resume Game");
+        gameState = STATE_START;
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over");
-
+        gameState = STATE_STOP;
         mainText.text = "Game over!! Score: " + score.ToString();
-        gameStart = false;
     }
 
-    public bool IsGameStart()
+    public int GetGameState()
     {
-        return gameStart;
+        return gameState;
     }
 }
