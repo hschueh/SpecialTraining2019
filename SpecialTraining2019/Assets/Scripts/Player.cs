@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
-    //Vector2 speed = new Vector2(0, 0);
     const float speedValue = 0.1f;
 
     private bool prevState;
@@ -20,7 +19,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (GameController.getInstance().IsGameStart() == false)
         {
             prevState = true;
@@ -34,25 +32,32 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Vector2 newPos = rb.position;
+        Vector2 posDiff = new Vector2();
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            newPos.y += speedValue;
+            posDiff.y += speedValue;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            newPos.y -= speedValue;
+            posDiff.y -= speedValue;
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            newPos.x -= speedValue;
+            posDiff.x -= speedValue;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            newPos.x += speedValue;
+            posDiff.x += speedValue;
         }
 
-        rb.MovePosition(newPos);
+        if (posDiff.x > 0.05f)
+            gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
+        else if (posDiff.x < -0.05f)
+            gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, -45, 0));
+        else
+            gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+        rb.MovePosition(rb.position + posDiff);
     }
 
     void OnTriggerEnter2D(Collider2D col)
