@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    bool idle = true;
     Rigidbody2D rb;
     Vector2 speed = new Vector2(0, 0);
 
@@ -22,8 +21,8 @@ public class Projectile : MonoBehaviour
             // when pause, do nothing.
             return;
         }
-        if (!idle)
-            rb.MovePosition(rb.position + speed);
+
+        rb.transform.Translate(new Vector3(speed.x, speed.y, 0));
     }
 
     public void SetSpeed(float x, float y)
@@ -31,18 +30,14 @@ public class Projectile : MonoBehaviour
         speed.x = x;
         speed.y = y;
         speed.Normalize();
-        speed *= 0.1f;
+        speed *= 0.06f;
     }
 
     public void SetPosition(float x, float y)
     {
-        gameObject.transform.TransformVector(new Vector3(x, y, 0));
+        gameObject.transform.position = new Vector3(x, y, 0);
     }
-
-    public void Shot()
-    {
-        idle = false;
-    }
+   
 
     void OnBecameInvisible()
     {

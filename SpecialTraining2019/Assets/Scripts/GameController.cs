@@ -17,8 +17,6 @@ public class GameController : MonoBehaviour
     private int gameState;
     private int score;
 
-    private ArrayList projectTileList;
-
     GameObject projectile;
 
     public static GameController getInstance()
@@ -44,7 +42,10 @@ public class GameController : MonoBehaviour
         score = 0;
         gameState = STATE_STOP;
 
-        projectTileList = new ArrayList();
+        if (projectile == null)
+            projectile = GameObject.Find("Projectile");
+
+        projectile.transform.position = new Vector3(1, 2, -10);
     }
 
     // Update is called once per frame
@@ -92,15 +93,8 @@ public class GameController : MonoBehaviour
 
     void CreateProjectile()
     {
-        if (projectile == null)
-            projectile = GameObject.Find("Projectile");
-
-        Projectile projectileCopy = (Projectile)Instantiate(projectile).GetComponent<Projectile>();
-        projectileCopy.SetSpeed(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
-        projectileCopy.SetPosition(0, 0);
-        projectileCopy.Shot();
-
-        projectTileList.Add(projectileCopy);
+        ProjectController projectController = new ProjectController(projectile);
+        projectController.StartProject();
 
     }
 
