@@ -17,7 +17,12 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!idle)
+        if (GameController.getInstance().GetGameState() == GameController.STATE_PAUSE)
+        {
+            // when pause, do nothing.
+            return;
+        }
+        if (!idle)
             rb.MovePosition(rb.position + speed);
     }
 
