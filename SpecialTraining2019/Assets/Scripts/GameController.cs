@@ -11,13 +11,18 @@ public class GameController : MonoBehaviour
     public static int STATE_PAUSE = 2;
     public static int STATE_DEAD = 3;
 
+    public static int BULLET_LIMIT = 30;
+
     public static GameController instance;
 
     public Text mainText;
     private int gameState;
     private int score;
 
+    private int counter;
+
     GameObject projectile;
+    private ProjectController projectController;
 
     public static GameController getInstance()
     {
@@ -46,6 +51,8 @@ public class GameController : MonoBehaviour
             projectile = GameObject.Find("Projectile");
 
         projectile.transform.position = new Vector3(1, 2, -10);
+
+        projectController = new ProjectController(projectile);
     }
 
     // Update is called once per frame
@@ -65,8 +72,16 @@ public class GameController : MonoBehaviour
             {
                 // ResumeGame();
             }
-
+            else if (gameState == STATE_DEAD)
+            {
+                if (projectController.GetBulletNumber() == 0)
+                {
+                    gameState = STATE_STOP;
+                }
+            }
         }
+
+
 
         if (gameState == STATE_STOP)
         {
@@ -75,8 +90,11 @@ public class GameController : MonoBehaviour
         } else if (gameState == STATE_START)
         {
             // create one bullet
-            CreateProjectile();
+            if (counter % 3 == 0) {
+                CreateProjectile();
+            }
 
+            counter++;
             score++;
             mainText.text = "Score: " + score.ToString();
         } else if (gameState == STATE_PAUSE)
@@ -85,7 +103,8 @@ public class GameController : MonoBehaviour
             return;
         } else if (gameState == STATE_DEAD)
         {
-            GameOver();
+            // do nothing
+            return;
         }
 
 
@@ -93,9 +112,7 @@ public class GameController : MonoBehaviour
 
     void CreateProjectile()
     {
-        ProjectController projectController = new ProjectController(projectile);
         projectController.StartProject();
-
     }
 
     public void StartGame()
@@ -103,6 +120,7 @@ public class GameController : MonoBehaviour
         Debug.Log("Start Game");
         gameState = STATE_START;
         score = 0;
+        counter = 0;
     }
 
     public void PauseGame()
@@ -120,7 +138,7 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over");
-        gameState = STATE_STOP;
+        gameState = STATE_DEAD;
         mainText.text = "Game over!! Score: " + score.ToString();
     }
 

@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     Rigidbody2D rb;
     Vector2 speed = new Vector2(0, 0);
 
+    ITileCallback callback = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,5 +44,15 @@ public class Projectile : MonoBehaviour
     void OnBecameInvisible()
     {
         Destroy(gameObject);
+
+        if (callback != null)
+        {
+            callback.OnDestroy();
+        }
+    }
+
+    public void SetCallback(ITileCallback callback)
+    {
+        this.callback = callback;
     }
 }

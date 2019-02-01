@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectController
+public class ProjectController : ITileCallback
 {
-
     GameObject baseObject;
+
+    int counter;
 
     public ProjectController(GameObject projectTile)
     {
         baseObject = projectTile;
+        counter = 0;
     }
 
     public void StartProject()
     {
+
+        if (counter >= GameController.BULLET_LIMIT)
+        {
+            return;
+        }
 
         //float player_x = player.transform.position.x;
         //float player_y = player.transform.position.y;
@@ -39,6 +46,22 @@ public class ProjectController
         Debug.Log("StartProject: " + init_x + "  " + init_y);
 
         tile.SetPosition(init_x, init_y);
+        tile.SetCallback(this);
+        counter++;
 
     }
+
+    public void OnDestroy()
+    {
+        counter--;
+    }
+
+    public int GetBulletNumber()
+    {
+        return counter;
+    }
+}
+
+public interface ITileCallback {
+    void OnDestroy();
 }
