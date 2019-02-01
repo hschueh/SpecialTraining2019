@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameController.getInstance().IsGameStart() == false)
+        {
+            return;
+        }
+
         Vector2 newPos = rb.position;
         if (Input.GetKey(KeyCode.UpArrow))
         {
@@ -39,5 +44,6 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log("Triggered!");
+        GameController.getInstance().GameOver();
     }
 }
