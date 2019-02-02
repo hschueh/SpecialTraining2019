@@ -3,7 +3,7 @@
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-Assets/AssetStoreTools*
+SpecialTraining2019/Assets/AssetStoreTools*
 
 # Visual Studio cache directory
 .vs/
@@ -35,3 +35,20 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Ignore Current Facebook Settings
+FacebookSettings.asset*
+
+# Ignore android wrapper lib created by build scripts
+facebook-android-wrapper/libs/
+
+# Ignore Plugin Folders which are build by build
+SpecialTraining2019/Assets/Plugins/
+
+# Ignore Unity Jar Resolver which is pulled in by build script
+SpecialTraining2019/Assets/PlayServicesResolver.meta
+SpecialTraining2019/Assets/PlayServicesResolver/
+
+# Ignore Facebook SDK
+SpecialTraining2019/Assets/FacebookSDK.meta
+SpecialTraining2019/Assets/FacebookSDK/

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ProjectController : ITileCallback
 {
-    GameObject baseObject;
+    readonly GameObject baseObject;
 
     int counter;
-    float widthRatio = 6.55f;
-    float heightRatio = 5.0f;
+    readonly float widthRatio;
+    readonly float heightRatio;
 
     public ProjectController(GameObject projectTile)
     {
@@ -49,8 +49,6 @@ public class ProjectController : ITileCallback
 
         init_x *= widthRatio;
         init_y *= heightRatio;
-
-        Debug.Log("StartProject: " + init_x + "  " + init_y);
 
         tile.SetPosition(init_x, init_y);
         tile.SetCallback(this);
