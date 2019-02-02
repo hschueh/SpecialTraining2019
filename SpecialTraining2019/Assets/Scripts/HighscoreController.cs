@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class HighscoreController : MonoBehaviour
 {
@@ -77,5 +78,10 @@ public class HighscoreController : MonoBehaviour
         thread.Start();
     }
 
+    public void GoToPlayScene()
+    {
+        Debug.Log("GoToPlayScene");
+        SceneManager.LoadScene("PlayScene", LoadSceneMode.Single);
+    }
 
 }
