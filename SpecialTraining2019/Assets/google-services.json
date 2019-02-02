@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "153690396939",
+    "firebase_url": "https://specialtraining2019.firebaseio.com",
+    "project_id": "specialtraining2019",
+    "storage_bucket": "specialtraining2019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153690396939:android:dc3bf9c7d95df62d",
+        "android_client_info": {
+          "package_name": "com.gonnaggstudio.specialtraining2019"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153690396939-eke32brgo2djonj2jdmop1obbm5bjqut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALDi-UG_epewstpmSyJZ8PL8Ibg7KQq10"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

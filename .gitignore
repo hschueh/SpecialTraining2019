@@ -52,3 +52,13 @@ SpecialTraining2019/Assets/PlayServicesResolver/
 # Ignore Facebook SDK
 SpecialTraining2019/Assets/FacebookSDK.meta
 SpecialTraining2019/Assets/FacebookSDK/
+
+# Ignore Firebase SDK
+SpecialTraining2019/Assets/Editor Default Resources.meta
+SpecialTraining2019/Assets/Editor Default Resources/
+SpecialTraining2019/Assets/Firebase.meta
+SpecialTraining2019/Assets/Firebase/
+SpecialTraining2019/Assets/Parse.meta
+SpecialTraining2019/Assets/Parse/
+SpecialTraining2019/Assets/StreamingAssets.meta
+SpecialTraining2019/Assets/StreamingAssets/
