@@ -139,7 +139,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Game Over");
         gameState = STATE_DEAD;
-        mainText.text = "Game over!! Score: " + score.ToString();
+        mainText.text = "Game over!!\n Score: " + score.ToString();
     }
 
     public int GetGameState()
