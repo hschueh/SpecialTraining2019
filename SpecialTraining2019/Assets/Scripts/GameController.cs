@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -145,5 +146,11 @@ public class GameController : MonoBehaviour
     public int GetGameState()
     {
         return gameState;
+    }
+
+    public void GoToLeaderboard()
+    {
+        Debug.Log("GoToLeaderboard triggered");
+        SceneManager.LoadScene("LeaderboardScene", LoadSceneMode.Single);
     }
 }
