@@ -39,9 +39,9 @@ public class InputWrapper : MonoBehaviour
     void Start()
     {
         joystickBase = GameObject.Find("JoystickBase");
-        //joystickBase.GetComponent<SpriteRenderer>().enabled = false;
+        joystickBase.GetComponent<SpriteRenderer>().enabled = false;
         stick = GameObject.Find("Joystick");
-        //stick.GetComponent<SpriteRenderer>().enabled = false;
+        stick.GetComponent<SpriteRenderer>().enabled = false;
 
         switch (Application.platform)
         {
@@ -69,20 +69,24 @@ public class InputWrapper : MonoBehaviour
                     Touch touch = Input.GetTouch(0);
                     if (pivot.Equals(nanVec2))
                     {
-                        pivot = touch.position;
-
                         joystickBase.GetComponent<SpriteRenderer>().enabled = true;
                         stick.GetComponent<SpriteRenderer>().enabled = true;
                         Vector3 pos = Camera.main.ScreenToWorldPoint(touch.position);
+                        pivot = pos;
                         transform.position = new Vector3(pos.x, pos.y, 0);
 
                         stick.transform.localPosition = new Vector3(0, 0, 0);
                     }
                     else
                     {
-                        movement = touch.position - pivot;
-                        var mNormalize = movement.normalized * 0.2f;
-                        stick.transform.localPosition = new Vector3(mNormalize.x, mNormalize.y, 0);
+                        Vector3 tPos = Camera.main.ScreenToWorldPoint(touch.position);
+                        movement.x = tPos.x - pivot.x;
+                        movement.y = tPos.y - pivot.y;
+                        if (movement.magnitude > 0.2f)
+                        {
+                            movement = movement.normalized * 0.2f;
+                        }
+                        stick.transform.localPosition = new Vector3(movement.x, movement.y, 0);
                     }
                 }
                 else

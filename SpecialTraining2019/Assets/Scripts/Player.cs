@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
-    const float speedValue = 0.1f;
+    // Moving speed also affect by InputWrapper
+    const float speedValue = 0.5f;
 
     private bool shouldInit;
 
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Vector2 posDiff = InputWrapper.getInstance().getMovement().normalized;
+        Vector2 posDiff = InputWrapper.getInstance().getMovement();
         posDiff *= speedValue;
 
         if (posDiff.x > 0.05f)
