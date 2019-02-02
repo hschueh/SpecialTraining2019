@@ -117,6 +117,7 @@ public class InputWrapper : MonoBehaviour
                 {
                     movement.x += 1;
                 }
+                movement = movement.normalized * 0.2f;
                 break;
         }
     }
