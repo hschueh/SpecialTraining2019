@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -213,5 +214,11 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("User cancelled login");
         }
+    }
+
+    public void GoToLeaderboard()
+    {
+        Debug.Log("GoToLeaderboard triggered");
+        SceneManager.LoadScene("LeaderboardScene", LoadSceneMode.Single);
     }
 }
