@@ -41,7 +41,7 @@ class ScoreModel {
     	while($query_data = mysqli_fetch_row($result)) {
 			error_log(json_encode($query_data));
 		}
-    	$this -> disconnect_db();
+    	$this -> disconnect_db($connection);
     }
 
     public function getScoreById($user_id) {
@@ -52,7 +52,7 @@ class ScoreModel {
     	while($query_data = mysqli_fetch_row($result)) {
 			error_log(json_encode($query_data));
 		}
-    	$this -> disconnect_db();
+    	$this -> disconnect_db($connection);
     }
 
 }
