@@ -316,7 +316,7 @@ PrefabInstance:
     - target: {fileID: 4389953963545603066, guid: db7d2655c77fe4ec5a67c545c291cadf,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4389953963545603068, guid: db7d2655c77fe4ec5a67c545c291cadf,
         type: 3}
@@ -819,7 +819,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1510523629}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2040149860}
+        m_MethodName: LoginByFacebook
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1510523629
@@ -876,7 +887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1524354210
 MonoBehaviour:
   m_ObjectHideFlags: 0
