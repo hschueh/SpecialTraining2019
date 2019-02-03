@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
+using System.Net.Http;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class HighscoreController : MonoBehaviour
 {
@@ -21,13 +22,15 @@ public class HighscoreController : MonoBehaviour
     private int boardType;
     private int boardState;
 
+    static HttpClient client = new HttpClient();
+
     private List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
 
     // Start is called before the first frame update
     void Start()
     {
         boardType = TYPE_SELF;
-        RetrieveData();
+        StartCoroutine(RetrieveDataAsync());
     }
 
     // Update is called once per frame
@@ -61,27 +64,38 @@ public class HighscoreController : MonoBehaviour
     public void SetBoardType(int boardType)
     {
         this.boardType = boardType;
-        RetrieveData();
+        StartCoroutine(RetrieveDataAsync());
     }
 
-    void RetrieveData()
+    IEnumerator RetrieveDataAsync()
     {
         boardState = STATE_LOADING;
-        Thread thread = new Thread(delegate ()
+
+        UnityWebRequest www = UnityWebRequest.Get("http://54.183.173.15/api/test.php");
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
         {
-            // Gen data. The process shuold change depends on boardType.
-            list.Add(new KeyValuePair<string, int>("Hoso", 99999));
-            list.Add(new KeyValuePair<string, int>("Hoso", 69999));
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // Show results as text
+            //Debug.Log(www.downloadHandler.text);
+
+            // Or retrieve results as binary data
+            //byte[] results = www.downloadHandler.data;
+
+            list.Add(new KeyValuePair<string, int>(www.downloadHandler.text, 1));
+            list.Add(new KeyValuePair<string, int>("Hoso", 2));
             boardState = STATE_FINISH;
-        });
-        //Start the Thread and execute the code inside it
-        thread.Start();
+        }
     }
 
-    public void GoToPlayScene()
+
+    public void GoToMenuScene()
     {
-        Debug.Log("GoToPlayScene");
-        SceneManager.LoadScene("PlayScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
     }
 
 }

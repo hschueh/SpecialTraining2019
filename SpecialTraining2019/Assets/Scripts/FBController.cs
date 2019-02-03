@@ -6,9 +6,23 @@ using Facebook.Unity;
 
 public class FBController : MonoBehaviour
 {
+    public static FBController instance;
+    public static FBController getInstance()
+    {
+        return instance;
+    }
 
     private void Awake()
     {
+        //If we don't currently have a game control...
+        if (instance == null)
+            //...set this one to be it...
+            instance = this;
+        //...otherwise...
+        else if (instance != this)
+            //...destroy this one because it is a duplicate.
+            Destroy(gameObject);
+
         if (!FB.IsInitialized)
         {
             // Initialize the Facebook SDK
@@ -42,11 +56,6 @@ public class FBController : MonoBehaviour
             FB.ActivateApp();
             // Continue with Facebook SDK
             // ...
-
-            // Facebook
-            Debug.Log("Login to FB...");
-            var perms = new List<string>() { };
-            FB.LogInWithReadPermissions(perms, AuthCallback);
         }
         else
         {
@@ -86,5 +95,13 @@ public class FBController : MonoBehaviour
         {
             Debug.Log("User cancelled login");
         }
+    }
+
+    public void LoginToFacebook()
+    {
+        // Facebook
+        Debug.Log("Login to FB...");
+        var perms = new List<string>() { };
+        FB.LogInWithReadPermissions(perms, AuthCallback);
     }
 }

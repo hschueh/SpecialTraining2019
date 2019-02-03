@@ -19,6 +19,7 @@ public class ProjectController : ITileCallback
         Vector3 posTopRight = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0));
         widthRatio = (posTopRight.x - posBotLeft.x) / 2;
         heightRatio = (posTopRight.y - posBotLeft.y) / 2;
+        baseObject.transform.position = posBotLeft;
     }
 
     public void StartProject()

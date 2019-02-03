@@ -152,10 +152,9 @@ public class GameController : MonoBehaviour
         return gameState;
     }
 
-    public void GoToLeaderboard()
+    public void GoToMenuScene()
     {
-        Debug.Log("GoToLeaderboard triggered");
-        SceneManager.LoadScene("LeaderboardScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
     }
 
     public Vector3 getPlayerPos()
