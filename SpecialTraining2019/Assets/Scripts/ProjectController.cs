@@ -51,6 +51,7 @@ public class ProjectController : ITileCallback
         init_y *= heightRatio;
 
         tile.SetPosition(init_x, init_y);
+        tile.SetType(Projectile.TYPE_GUIDED);
         tile.SetCallback(this);
         counter++;
 

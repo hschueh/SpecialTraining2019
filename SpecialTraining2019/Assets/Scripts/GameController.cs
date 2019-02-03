@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     private int counter;
 
     GameObject projectile;
+    GameObject player;
     private ProjectController projectController;
 
     public static GameController getInstance()
@@ -50,6 +51,8 @@ public class GameController : MonoBehaviour
 
         if (projectile == null)
             projectile = GameObject.Find("Projectile");
+        if (player == null)
+            player = GameObject.Find("Player");
 
         projectile.transform.position = new Vector3(1, 2, -10);
 
@@ -174,5 +177,10 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("GoToLeaderboard triggered");
         SceneManager.LoadScene("LeaderboardScene", LoadSceneMode.Single);
+    }
+
+    public Vector3 getPlayerPos()
+    {
+        return player.transform.position;
     }
 }
