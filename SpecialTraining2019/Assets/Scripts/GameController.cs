@@ -165,4 +165,9 @@ public class GameController : MonoBehaviour
     {
         return player.transform.position;
     }
+
+    public int GetCounter()
+    {
+        return counter;
+    }
 }
