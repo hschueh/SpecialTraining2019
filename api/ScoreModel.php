@@ -28,31 +28,43 @@ class ScoreModel {
     public function addScore($user_id, $score) {
     	$connection = $this -> connect_db();
     	$n = mysqli_real_escape_string($connection, $user_id);
-   		$a = mysqli_real_escape_string($connection, $score);
+	$a = mysqli_real_escape_string($connection, $score);
     	$query = "INSERT INTO `scores` (`user_id`, `score`) VALUES ('$n', '$a');";
     	mysqli_query($connection, $query);
     	$this -> disconnect_db($connection);
     }
 
-    public function getScores() {
+    public function getScores($limit) {
     	$connection = $this -> connect_db();
-    	$query = "SELECT * from `scores`;";
+    	$query = "SELECT * from `scores` ORDER BY `score` DESC LIMIT $limit;";
     	$result = mysqli_query($connection, $query);
-    	while($query_data = mysqli_fetch_row($result)) {
-			error_log(json_encode($query_data));
-		}
-    	$this -> disconnect_db($connection);
+	$ret = array();
+	while($query_data = mysqli_fetch_row($result)) {
+		array_push($ret, array(
+			'id' => $query_data[0],
+			'user_id' => $query_data[1],
+			'score' => $query_data[2]
+		));
+	}
+	$this -> disconnect_db($connection);
+	return $ret;
     }
 
-    public function getScoreById($user_id) {
-    	$user_id = mysqli_real_escape_string($connection, $user_id);
-    	$connection = $this -> connect_db();
-    	$query = "SELECT * from `scores` WHERE `user_id` = $user_id;";
-    	$result = mysqli_query($connection, $query);
+    public function getScoreById($user_id, $limit) {
+	$connection = $this -> connect_db();    
+	$user_id = mysqli_real_escape_string($connection, $user_id);
+    	$query = "SELECT * from `scores` WHERE `user_id` = $user_id ORDER BY `score` DESC LIMIT $limit;";
+	$result = mysqli_query($connection, $query);
+	$ret = array();
     	while($query_data = mysqli_fetch_row($result)) {
-			error_log(json_encode($query_data));
-		}
-    	$this -> disconnect_db($connection);
+		array_push($ret, array(
+			'id' => $query_data[0],
+			'user_id' => $query_data[1],
+			'score' => $query_data[2]
+		));
+	}
+	$this -> disconnect_db($connection);
+	return $ret;
     }
 
 }
