@@ -9,8 +9,9 @@ using UnityEngine.Networking;
 
 public class HighscoreController : MonoBehaviour
 {
-    public static int STATE_LOADING = 0;
-    public static int STATE_FINISH = 1;
+    public static int STATE_IDLE = 0;
+    public static int STATE_LOADING = 1;
+    public static int STATE_FINISH = 2;
 
     public static int TYPE_GLOBAL = 0;
     public static int TYPE_SELF = 1;
@@ -44,10 +45,16 @@ public class HighscoreController : MonoBehaviour
         if (boardState == STATE_FINISH)
         {
             bodyText.text = GenerateLeaderboard();
+            boardState = STATE_IDLE;
         }
-        else
+        else if (boardState == STATE_LOADING)
         {
             bodyText.text = "loading...";
+        }
+
+        if(Input.GetKey(KeyCode.Escape))
+        {
+            GoToMenuScene();
         }
     }
 

@@ -63,6 +63,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            GoToMenuScene();
+        }
+
         if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
         {
             if (gameState == STATE_STOP)
@@ -111,7 +116,6 @@ public class GameController : MonoBehaviour
             // do nothing
             return;
         }
-
 
     }
 

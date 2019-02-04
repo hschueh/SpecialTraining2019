@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 
 using Facebook.Unity;
+using Facebook.MiniJSON;
 
 public class FBController : MonoBehaviour
 {
@@ -34,6 +37,7 @@ public class FBController : MonoBehaviour
             // Already initialized, signal an app activation App Event
             FB.ActivateApp();
         }
+        DontDestroyOnLoad(instance);
     }
 
     // Start is called before the first frame update
@@ -90,6 +94,7 @@ public class FBController : MonoBehaviour
             {
                 Debug.Log(perm);
             }
+            FB.API("me?fields=id,name,picture", HttpMethod.GET, HandleFacebookDelegate);
         }
         else
         {
@@ -104,4 +109,37 @@ public class FBController : MonoBehaviour
         var perms = new List<string>() { };
         FB.LogInWithReadPermissions(perms, AuthCallback);
     }
+
+    static IEnumerator ReadImageToObject(string path)
+    {
+        //https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10215711139469634&height=50&width=50&ext=1551866220&hash=AeTiWYxKJqvTizos
+
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(path);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            MenuController.getInstance().SetProfilePic(((DownloadHandlerTexture)www.downloadHandler).texture);
+        }
+    }
+
+    void HandleFacebookDelegate(IGraphResult result)
+    {
+        Debug.Log(result);
+        //string url = result.ResultDictionary["picture"]["data"]["url"];
+
+        var dict = Json.Deserialize(result.RawResult) as Dictionary<string, object>;
+        object picture;
+        if (dict.TryGetValue("picture", out picture))
+        {
+            object data = ((Dictionary<string, object>)picture)["data"];
+            string url = (string)((Dictionary<string, object>)data)["url"];
+            StartCoroutine(ReadImageToObject(url));
+        }
+    }
+
 }
