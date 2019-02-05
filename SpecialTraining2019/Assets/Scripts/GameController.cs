@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -17,8 +18,12 @@ public class GameController : MonoBehaviour
     public static GameController instance;
 
     public Text mainText;
+    public Text scoreText;
+    public Text scoreText2;
+
     private int gameState;
     private int score;
+    private float gameStartTime;
 
     private int counter;
 
@@ -48,6 +53,7 @@ public class GameController : MonoBehaviour
     {
         score = 0;
         gameState = STATE_STOP;
+        gameStartTime = Time.time;
 
         if (projectile == null)
             projectile = GameObject.Find("Projectile");
@@ -57,6 +63,8 @@ public class GameController : MonoBehaviour
         projectile.transform.position = new Vector3(1, 2, -10);
 
         projectController = new ProjectController(projectile);
+
+        mainText.text = "Touch screen to start.";
 
     }
 
@@ -104,9 +112,14 @@ public class GameController : MonoBehaviour
                 CreateProjectile();
             }
 
+            float diff_time = Time.time - gameStartTime;
+
+            scoreText.text = ((int)diff_time).ToString();
+            scoreText2.text = String.Format(".{0}", (int)((diff_time - (int)diff_time) * 1000));
+
             counter++;
             score++;
-            mainText.text = "Score: " + score.ToString();
+
         } else if (gameState == STATE_PAUSE)
         {
             // do nothing
@@ -130,6 +143,8 @@ public class GameController : MonoBehaviour
         gameState = STATE_START;
         score = 0;
         counter = 0;
+        gameStartTime = Time.time;
+        mainText.gameObject.SetActive(false);
     }
 
     public void PauseGame()
@@ -148,6 +163,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Game Over");
         gameState = STATE_DEAD;
+        mainText.gameObject.SetActive(true);
         mainText.text = "Game over!!\n Score: " + score.ToString();
     }
 
@@ -169,5 +185,10 @@ public class GameController : MonoBehaviour
     public int GetCounter()
     {
         return counter;
+    }
+
+    public float GetTime()
+    {
+        return Time.time - gameStartTime;
     }
 }
