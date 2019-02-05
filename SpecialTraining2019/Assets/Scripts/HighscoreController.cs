@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Net.Http;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
+using Facebook.MiniJSON;
 
 public class HighscoreController : MonoBehaviour
 {
@@ -21,17 +20,20 @@ public class HighscoreController : MonoBehaviour
     public Text mainText;
     public Text bodyText;
     private int boardType;
-    private int boardState;
+    static  int boardState;
 
     static HttpClient client = new HttpClient();
 
-    private List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+    static private List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+
+    private readonly GetLeaderboardCallback callback = new GetLeaderboardCallback();
 
     // Start is called before the first frame update
     void Start()
     {
         boardType = TYPE_SELF;
-        StartCoroutine(RetrieveDataAsync());
+        boardState = STATE_LOADING;
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
     }
 
     // Update is called once per frame
@@ -52,7 +54,7 @@ public class HighscoreController : MonoBehaviour
             bodyText.text = "loading...";
         }
 
-        if(Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape))
         {
             GoToMenuScene();
         }
@@ -63,7 +65,7 @@ public class HighscoreController : MonoBehaviour
         StringBuilder sb = new StringBuilder();
         foreach (KeyValuePair<string, int> entry in list)
         {
-            sb.Append(entry.Key + ": " + entry.Value+ '\n');
+            sb.Append(entry.Key + ": " + entry.Value + '\n');
         }
         return sb.ToString();
     }
@@ -71,38 +73,33 @@ public class HighscoreController : MonoBehaviour
     public void SetBoardType(int boardType)
     {
         this.boardType = boardType;
-        StartCoroutine(RetrieveDataAsync());
-    }
-
-    IEnumerator RetrieveDataAsync()
-    {
         boardState = STATE_LOADING;
-
-        UnityWebRequest www = UnityWebRequest.Get("http://54.183.173.15/api/test.php");
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            // Show results as text
-            //Debug.Log(www.downloadHandler.text);
-
-            // Or retrieve results as binary data
-            //byte[] results = www.downloadHandler.data;
-
-            list.Add(new KeyValuePair<string, int>(www.downloadHandler.text, 1));
-            list.Add(new KeyValuePair<string, int>("Hoso", 2));
-            boardState = STATE_FINISH;
-        }
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
     }
-
 
     public void GoToMenuScene()
     {
         SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
     }
 
+    class GetLeaderboardCallback : IRequestCallback
+    {
+        public void OnFinish(string response)
+        {
+            // {"result":"1","data":[{"id":"2","user_id":"123","score":"456"},{"id":"3","user_id":"123","score":"123"},{"id":"1","user_id":"1","score":"100"}]}
+            var dict = Json.Deserialize(response) as Dictionary<string, object>;
+            object data;
+            if (dict.TryGetValue("data", out data))
+            {
+                foreach (object scores in (List<object>)data)
+                {
+                    int score = int.Parse((string)((Dictionary<string, object>)scores)["score"]);
+                    string uid = (string)((Dictionary<string, object>)scores)["user_id"];
+
+                    list.Add(new KeyValuePair<string, int>(uid, score));
+                }
+            }
+            boardState = STATE_FINISH;
+        }
+    }
 }

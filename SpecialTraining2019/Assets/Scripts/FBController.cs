@@ -15,6 +15,8 @@ public class FBController : MonoBehaviour
         return instance;
     }
 
+    private string userId = "";
+
     private void Awake()
     {
         //If we don't currently have a game control...
@@ -89,6 +91,7 @@ public class FBController : MonoBehaviour
             var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
             // Print current access token's User ID
             Debug.Log("FB userid: " + aToken.UserId);
+            this.userId = aToken.UserId;
             // Print current access token's granted permissions
             foreach (string perm in aToken.Permissions)
             {
@@ -108,6 +111,11 @@ public class FBController : MonoBehaviour
         Debug.Log("Login to FB...");
         var perms = new List<string>() { };
         FB.LogInWithReadPermissions(perms, AuthCallback);
+    }
+
+    public string GetUserId()
+    {
+        return userId;
     }
 
     static IEnumerator ReadImageToObject(string path)
