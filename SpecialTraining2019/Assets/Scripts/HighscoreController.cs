@@ -1,15 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading;
+using System.Net.Http;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Facebook.MiniJSON;
 
 public class HighscoreController : MonoBehaviour
 {
-    public static int STATE_LOADING = 0;
-    public static int STATE_FINISH = 1;
+    public static int STATE_IDLE = 0;
+    public static int STATE_LOADING = 1;
+    public static int STATE_FINISH = 2;
 
     public static int TYPE_GLOBAL = 0;
     public static int TYPE_SELF = 1;
@@ -19,15 +20,20 @@ public class HighscoreController : MonoBehaviour
     public Text mainText;
     public Text bodyText;
     private int boardType;
-    private int boardState;
+    static  int boardState;
 
-    private List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+    static HttpClient client = new HttpClient();
+
+    static private List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+
+    private readonly GetLeaderboardCallback callback = new GetLeaderboardCallback();
 
     // Start is called before the first frame update
     void Start()
     {
         boardType = TYPE_SELF;
-        RetrieveData();
+        boardState = STATE_LOADING;
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
     }
 
     // Update is called once per frame
@@ -41,10 +47,16 @@ public class HighscoreController : MonoBehaviour
         if (boardState == STATE_FINISH)
         {
             bodyText.text = GenerateLeaderboard();
+            boardState = STATE_IDLE;
         }
-        else
+        else if (boardState == STATE_LOADING)
         {
             bodyText.text = "loading...";
+        }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            GoToMenuScene();
         }
     }
 
@@ -53,7 +65,7 @@ public class HighscoreController : MonoBehaviour
         StringBuilder sb = new StringBuilder();
         foreach (KeyValuePair<string, int> entry in list)
         {
-            sb.Append(entry.Key + ": " + entry.Value+ '\n');
+            sb.Append(entry.Key + ": " + entry.Value + '\n');
         }
         return sb.ToString();
     }
@@ -61,27 +73,33 @@ public class HighscoreController : MonoBehaviour
     public void SetBoardType(int boardType)
     {
         this.boardType = boardType;
-        RetrieveData();
-    }
-
-    void RetrieveData()
-    {
         boardState = STATE_LOADING;
-        Thread thread = new Thread(delegate ()
-        {
-            // Gen data. The process shuold change depends on boardType.
-            list.Add(new KeyValuePair<string, int>("Hoso", 99999));
-            list.Add(new KeyValuePair<string, int>("Hoso", 69999));
-            boardState = STATE_FINISH;
-        });
-        //Start the Thread and execute the code inside it
-        thread.Start();
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
     }
 
-    public void GoToPlayScene()
+    public void GoToMenuScene()
     {
-        Debug.Log("GoToPlayScene");
-        SceneManager.LoadScene("PlayScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
     }
 
+    class GetLeaderboardCallback : IRequestCallback
+    {
+        public void OnFinish(string response)
+        {
+            // {"result":"1","data":[{"id":"2","user_id":"123","score":"456"},{"id":"3","user_id":"123","score":"123"},{"id":"1","user_id":"1","score":"100"}]}
+            var dict = Json.Deserialize(response) as Dictionary<string, object>;
+            object data;
+            if (dict.TryGetValue("data", out data))
+            {
+                foreach (object scores in (List<object>)data)
+                {
+                    int score = int.Parse((string)((Dictionary<string, object>)scores)["score"]);
+                    string uid = (string)((Dictionary<string, object>)scores)["user_id"];
+
+                    list.Add(new KeyValuePair<string, int>(uid, score));
+                }
+            }
+            boardState = STATE_FINISH;
+        }
+    }
 }

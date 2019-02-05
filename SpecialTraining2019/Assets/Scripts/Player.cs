@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     // Moving speed also affect by InputWrapper
-    const float speedValue = 0.5f;
+    const float speedValue = 0.45f;
 
     private bool shouldInit;
 
@@ -48,7 +48,32 @@ public class Player : MonoBehaviour
         else
             gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
-        rb.MovePosition(rb.position + posDiff);
+        Vector2 final_pos = rb.position + posDiff;
+
+        Vector3 posBotLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        Vector3 posTopRight = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0));
+
+        if (final_pos.x > posTopRight.x) 
+        {
+            final_pos.x = posTopRight.x - 0.1f;
+        }
+
+        if (final_pos.x < posBotLeft.x)
+        {
+            final_pos.x = posBotLeft.x + 0.1f;
+        }
+
+        if (final_pos.y > posTopRight.y)
+        {
+            final_pos.y = posTopRight.y - 0.1f;
+        }
+
+        if (final_pos.y < posBotLeft.y)
+        {
+            final_pos.y = posBotLeft.y + 0.1f;
+        }
+
+        rb.MovePosition(final_pos);
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -64,6 +89,6 @@ public class Player : MonoBehaviour
 
     void MoveToInitPosition()
     {
-         rb.MovePosition(new Vector2(0, -2.5f));
+         rb.MovePosition(new Vector2(0, 0));
     }
 }

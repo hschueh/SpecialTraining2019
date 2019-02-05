@@ -10,15 +10,19 @@ public class ProjectController : ITileCallback
     readonly float widthRatio;
     readonly float heightRatio;
 
+    int special_bullet_time;
+
     public ProjectController(GameObject projectTile)
     {
         baseObject = projectTile;
         counter = 0;
+        special_bullet_time = 120;
 
         Vector3 posBotLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
         Vector3 posTopRight = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0));
         widthRatio = (posTopRight.x - posBotLeft.x) / 2;
         heightRatio = (posTopRight.y - posBotLeft.y) / 2;
+        baseObject.transform.position = posBotLeft;
     }
 
     public void StartProject()
@@ -42,6 +46,7 @@ public class ProjectController : ITileCallback
             init_y = temp;
         }
 
+        int global_counter = GameController.getInstance().GetCounter();
 
         Projectile tile = (Projectile)Object.Instantiate(baseObject).GetComponent<Projectile>();
 
@@ -51,7 +56,17 @@ public class ProjectController : ITileCallback
         init_y *= heightRatio;
 
         tile.SetPosition(init_x, init_y);
-        tile.SetType(Projectile.TYPE_GUIDED);
+        if (global_counter > special_bullet_time)
+        {
+            Debug.Log("Use Special Bullet!");
+            int rand = Random.Range(1, Projectile.TYPE_NUMBER);
+            tile.SetType(rand);
+            special_bullet_time += 90;
+        }
+        else
+        {
+            tile.SetType(Projectile.TYPE_NORMAL);
+        }
         tile.SetCallback(this);
         counter++;
 

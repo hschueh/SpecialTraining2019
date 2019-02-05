@@ -13,14 +13,19 @@ public class Projectile : MonoBehaviour
     public const int TYPE_NORMAL = 0;
     public const int TYPE_FAST = 1;
     public const int TYPE_GUIDED = 2;
+    public const int TYPE_NUMBER = 3;
 
     int projectileType = TYPE_NORMAL;
+
+    int life_counter;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+
+        life_counter = 0;
 
         switch (projectileType)
         {
@@ -39,6 +44,7 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        life_counter++;
         if (GameController.getInstance().GetGameState() == GameController.STATE_PAUSE)
         {
             // when pause, do nothing.
@@ -54,7 +60,7 @@ public class Projectile : MonoBehaviour
         speed.x = x;
         speed.y = y;
         speed.Normalize();
-        speed *= 0.06f;
+        speed *= 0.05f;
     }
 
     public void SetPosition(float x, float y)
@@ -65,6 +71,7 @@ public class Projectile : MonoBehaviour
 
     void OnBecameInvisible()
     {
+        life_counter = 0;
         Destroy(gameObject);
 
         if (callback != null)
@@ -92,7 +99,7 @@ public class Projectile : MonoBehaviour
                 rb.transform.Translate(new Vector3(speed.x, speed.y, 0));
                 break;
             case TYPE_FAST:
-                rb.transform.Translate(new Vector3(2 * speed.x, 2 * speed.y, 0));
+                rb.transform.Translate(new Vector3(1.6f * speed.x, 1.6f * speed.y, 0));
                 break;
             case TYPE_GUIDED:
                 double ts = new LocationInfo().timestamp;
@@ -101,7 +108,9 @@ public class Projectile : MonoBehaviour
                 if (speed.x * direction.x + speed.y * direction.y > 0)
                 {
                     speed /= 0.06f;
-                    speed = direction * 0.04f + speed * 0.96f;
+                    float scale = 0.1f - ((float)life_counter / 1500.0f);
+                    if (scale < 0) scale = 0.0f;
+                    speed = direction * scale + speed * (1.0f - scale);
                     speed *= 0.06f;
                 }
                 rb.transform.Translate(new Vector3(speed.x, speed.y, 0));
