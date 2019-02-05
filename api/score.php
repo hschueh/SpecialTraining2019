@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/ScoreModel.php';
 
-function update_score($user_id, $score) {
+function update_score($user_id, $user_name, $score) {
 	$score_model = new ScoreModel();
-	$score_model -> addScore($user_id, $score);
+	$score_model -> addScore($user_id, $user_name, $score);
 	return '1';
 }
 
@@ -27,17 +27,21 @@ function get_score($user_id, $limit = 10) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$user_id = "";
 	$score = "";
+	$user_name = "anomynous";
 	if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 		$user_id = $_POST['user_id'];
 	}
 	if (isset($_POST['score']) && is_numeric($_POST['score'])) {
 		$score = $_POST['score'];
 	}
+	if (isset($_POST['username'])) {
+		$user_name = $_POST['username'];
+	}
 
 	if ($user_id == "" || $score == "") {
 		header("HTTP/1.1 400 Bad request!");
 	} else {
-		$result = update_score($user_id, $score);
+		$result = update_score($user_id, $user_name, $score);
 		echo json_encode($result);
 	}
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
