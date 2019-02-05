@@ -65,6 +65,8 @@ public class GameController : MonoBehaviour
         projectController = new ProjectController(projectile);
 
         mainText.text = "Touch screen to start.";
+        scoreText.gameObject.SetActive(false);
+        scoreText2.gameObject.SetActive(false);
 
     }
 
@@ -145,6 +147,8 @@ public class GameController : MonoBehaviour
         counter = 0;
         gameStartTime = Time.time;
         mainText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(true);
+        scoreText2.gameObject.SetActive(true);
     }
 
     public void PauseGame()
@@ -164,7 +168,7 @@ public class GameController : MonoBehaviour
         Debug.Log("Game Over");
         gameState = STATE_DEAD;
         mainText.gameObject.SetActive(true);
-        mainText.text = "Game over!!\n Score: " + score.ToString();
+        mainText.text = "Game over!!";
     }
 
     public int GetGameState()
