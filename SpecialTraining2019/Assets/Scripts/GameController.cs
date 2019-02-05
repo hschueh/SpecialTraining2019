@@ -118,6 +118,7 @@ public class GameController : MonoBehaviour
         } else if (gameState == STATE_PRESTART)
         {
             prestart_counter++;
+            mainText.gameObject.SetActive(false);
             PreStartGame();
         } else if (gameState == STATE_START)
         {
