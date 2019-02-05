@@ -60,7 +60,7 @@ public class Projectile : MonoBehaviour
         speed.x = x;
         speed.y = y;
         speed.Normalize();
-        speed *= 0.06f;
+        speed *= 0.05f;
     }
 
     public void SetPosition(float x, float y)
@@ -99,7 +99,7 @@ public class Projectile : MonoBehaviour
                 rb.transform.Translate(new Vector3(speed.x, speed.y, 0));
                 break;
             case TYPE_FAST:
-                rb.transform.Translate(new Vector3(2 * speed.x, 2 * speed.y, 0));
+                rb.transform.Translate(new Vector3(1.6f * speed.x, 1.6f * speed.y, 0));
                 break;
             case TYPE_GUIDED:
                 double ts = new LocationInfo().timestamp;

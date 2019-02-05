@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
     public static int STATE_DEAD = 3;
     public static int STATE_PRESTART = 4;
 
-    public static int BULLET_LIMIT = 30;
+    public static int BULLET_LIMIT = 20;
 
     public static GameController instance;
 

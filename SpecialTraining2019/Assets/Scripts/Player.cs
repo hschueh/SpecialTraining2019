@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     // Moving speed also affect by InputWrapper
-    const float speedValue = 0.5f;
+    const float speedValue = 0.45f;
 
     private bool shouldInit;
 
