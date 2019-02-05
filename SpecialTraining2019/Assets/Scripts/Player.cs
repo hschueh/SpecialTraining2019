@@ -64,6 +64,6 @@ public class Player : MonoBehaviour
 
     void MoveToInitPosition()
     {
-         rb.MovePosition(new Vector2(0, -2.5f));
+         rb.MovePosition(new Vector2(0, 0));
     }
 }

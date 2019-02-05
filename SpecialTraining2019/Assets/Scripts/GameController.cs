@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public static int STATE_START = 1;
     public static int STATE_PAUSE = 2;
     public static int STATE_DEAD = 3;
+    public static int STATE_PRESTART = 4;
 
     public static int BULLET_LIMIT = 30;
 
@@ -25,6 +26,7 @@ public class GameController : MonoBehaviour
     private int score;
     private float gameStartTime;
 
+    private int prestart_counter;
     private int counter;
 
     GameObject projectile;
@@ -82,7 +84,15 @@ public class GameController : MonoBehaviour
         {
             if (gameState == STATE_STOP)
             {
-                StartGame();
+                prestart_counter = 0;
+                player.SetActive(true);
+                Debug.Log("Prestart " + prestart_counter);
+                gameState = STATE_PRESTART;
+                PreStartGame();
+            }
+            else if (gameState == STATE_PRESTART)
+            {  
+                // do nothing
             }
             else if (gameState == STATE_START)
             {
@@ -106,7 +116,12 @@ public class GameController : MonoBehaviour
         if (gameState == STATE_STOP)
         {
             // do nothing
+            GameStop();
             return;
+        } else if (gameState == STATE_PRESTART)
+        {
+            prestart_counter++;
+            PreStartGame();
         } else if (gameState == STATE_START)
         {
             // create one bullet
@@ -129,6 +144,7 @@ public class GameController : MonoBehaviour
         } else if (gameState == STATE_DEAD)
         {
             // do nothing
+            GameDead();
             return;
         }
 
@@ -137,6 +153,19 @@ public class GameController : MonoBehaviour
     void CreateProjectile()
     {
         projectController.StartProject();
+    }
+
+    public void PreStartGame()
+    {
+        Vector3 pos = new Vector3(0, -10.0f + prestart_counter  / 3.0f, 0);
+
+        player.transform.position = pos;
+
+        if (prestart_counter >= 30)
+        {
+            prestart_counter = 0;
+            StartGame();
+        }
     }
 
     public void StartGame()
@@ -169,6 +198,16 @@ public class GameController : MonoBehaviour
         gameState = STATE_DEAD;
         mainText.gameObject.SetActive(true);
         mainText.text = "Game over!!";
+    }
+
+    public void GameStop()
+    {
+        player.SetActive(false);
+    }
+
+    public void GameDead()
+    {
+        
     }
 
     public int GetGameState()
