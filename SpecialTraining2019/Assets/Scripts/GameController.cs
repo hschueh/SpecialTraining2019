@@ -104,10 +104,7 @@ public class GameController : MonoBehaviour
             }
             else if (gameState == STATE_DEAD)
             {
-                if (projectController.GetBulletNumber() == 0)
-                {
-                    gameState = STATE_STOP;
-                }
+
             }
         }
 
@@ -203,11 +200,16 @@ public class GameController : MonoBehaviour
     public void GameStop()
     {
         player.SetActive(false);
+        mainText.text = "Touch screen to start.";
     }
 
     public void GameDead()
     {
-        
+        if (projectController.GetBulletNumber() == 0)
+        {
+            gameState = STATE_STOP;
+        }
+        mainText.text = "Game over!!";
     }
 
     public int GetGameState()
