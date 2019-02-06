@@ -33,7 +33,7 @@ public class HighscoreController : MonoBehaviour
     {
         boardType = TYPE_SELF;
         boardState = STATE_LOADING;
-        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", new Dictionary<string, string>(), ApiController.TYPE_GET, callback));
     }
 
     // Update is called once per frame
@@ -74,7 +74,7 @@ public class HighscoreController : MonoBehaviour
     {
         this.boardType = boardType;
         boardState = STATE_LOADING;
-        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", ApiController.TYPE_GET, callback));
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", new Dictionary<string, string>(), ApiController.TYPE_GET, callback));
     }
 
     public void GoToMenuScene()

@@ -7,6 +7,7 @@ public class ApiController : MonoBehaviour
 {
     public const int TYPE_GET = 0;
     public const int TYPE_POST = 1;
+    public const string URL = "http://54.183.173.15/api/";
 
     public static ApiController instance;
     public static ApiController getInstance()
@@ -39,17 +40,17 @@ public class ApiController : MonoBehaviour
 
     }
 
-    public IEnumerator HttpRequestAsync(string request, int type, IRequestCallback callback, object body = null)
+    public IEnumerator HttpRequestAsync(string request, Dictionary<string, string> parameters, int type, IRequestCallback callback)
     {
         UnityWebRequest www;
         if (type == TYPE_GET)
         {
-            www = UnityWebRequest.Get("http://54.183.173.15/api/" + request);
+            www = UnityWebRequest.Get(URL + request + BuildRequestString(parameters));
             yield return www.SendWebRequest();
         }
         else
         {
-            www = UnityWebRequest.Post("http://54.183.173.15/api/" + request, (Dictionary<string, string>)body);
+            www = UnityWebRequest.Post(URL + request, parameters);
             yield return www.SendWebRequest();
         }
 
@@ -70,6 +71,21 @@ public class ApiController : MonoBehaviour
         }
     }
 
+    private string BuildRequestString(Dictionary<string, string> dicts)
+    {
+        string s = "";
+        bool flag = true;
+        foreach (KeyValuePair<string, string> pairs in dicts)
+        {
+            if (flag) s += "?";
+            else s += "&";
+            flag = false;
+            s += pairs.Key;
+            s += "=";
+            s += pairs.Value;
+        }
+        return s;
+    }
 }
 
 public interface IRequestCallback

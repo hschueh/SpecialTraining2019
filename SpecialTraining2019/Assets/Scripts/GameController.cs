@@ -238,13 +238,12 @@ public class GameController : MonoBehaviour
         shareBtn.GetComponent<Button>().interactable = false;
         StartCoroutine(ApiController.getInstance().HttpRequestAsync(
             "score.php",
-            ApiController.TYPE_POST, callback,
             new Dictionary<string, string>(){
                     { "user_id", FBController.getInstance().GetUserId() },
                     { "score", ""+score },
                     { "username", FBController.getInstance().GetUsername() }
-                })
-            );
+                },
+            ApiController.TYPE_POST, callback));
     }
 
     public Vector3 getPlayerPos()
