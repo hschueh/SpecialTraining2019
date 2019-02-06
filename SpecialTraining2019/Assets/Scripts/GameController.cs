@@ -80,6 +80,8 @@ public class GameController : MonoBehaviour
         mainText.text = "Touch screen to start.";
         scoreText.gameObject.SetActive(false);
         scoreText2.gameObject.SetActive(false);
+
+        RequestInterstitial();
     }
 
     // Update is called once per frame
@@ -219,8 +221,6 @@ public class GameController : MonoBehaviour
         mainText.gameObject.SetActive(true);
         mainText.text = "Game over!!";
         UploadScore();
-
-        RequestInterstitial();
     }
 
     public void GameStop()
@@ -250,7 +250,9 @@ public class GameController : MonoBehaviour
         if (this.interstitial.IsLoaded())
         {
             this.interstitial.Show();
+            RequestInterstitial();
         }
+
         gameState = STATE_STOP;
     }
 
@@ -308,7 +310,7 @@ public class GameController : MonoBehaviour
     #else
             string adUnitId = "unexpected_platform";
     #endif
-       
+
         // Initialize an InterstitialAd.
         this.interstitial = new InterstitialAd(adUnitId);
 
