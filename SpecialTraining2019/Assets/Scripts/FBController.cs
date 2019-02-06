@@ -16,6 +16,7 @@ public class FBController : MonoBehaviour
     }
 
     private string userId = "";
+    private string username = "";
 
     private void Awake()
     {
@@ -118,6 +119,11 @@ public class FBController : MonoBehaviour
         return userId;
     }
 
+    public string GetUsername()
+    {
+        return username;
+    }
+
     static IEnumerator ReadImageToObject(string path)
     {
         //https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10215711139469634&height=50&width=50&ext=1551866220&hash=AeTiWYxKJqvTizos
@@ -147,6 +153,11 @@ public class FBController : MonoBehaviour
             object data = ((Dictionary<string, object>)picture)["data"];
             string url = (string)((Dictionary<string, object>)data)["url"];
             StartCoroutine(ReadImageToObject(url));
+        }
+
+        if (dict.TryGetValue("name", out string name))
+        {
+            username = name;
         }
     }
 
