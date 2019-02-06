@@ -94,9 +94,9 @@ public class HighscoreController : MonoBehaviour
                 foreach (object scores in (List<object>)data)
                 {
                     int score = int.Parse((string)((Dictionary<string, object>)scores)["score"]);
-                    string uid = (string)((Dictionary<string, object>)scores)["user_id"];
+                    string name = (string)((Dictionary<string, object>)scores)["username"];
 
-                    list.Add(new KeyValuePair<string, int>(uid, score));
+                    list.Add(new KeyValuePair<string, int>(name, score));
                 }
             }
             boardState = STATE_FINISH;
