@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Facebook.MiniJSON;
+using System.Security.Cryptography;
+using System.Text;
 
 public class GameController : MonoBehaviour
 {
@@ -22,7 +24,6 @@ public class GameController : MonoBehaviour
     public Text mainText;
     public Text scoreText;
     public Text scoreText2;
-    public GameObject shareBtn;
 
     private int gameState;
     private int score;
@@ -70,8 +71,6 @@ public class GameController : MonoBehaviour
 
         projectController = new ProjectController(projectile);
 
-        shareBtn = GameObject.Find("ShareBtn");
-        shareBtn.SetActive(false);
         mainText.text = "Touch screen to start.";
         scoreText.gameObject.SetActive(false);
         scoreText2.gameObject.SetActive(false);
@@ -124,7 +123,6 @@ public class GameController : MonoBehaviour
         {
             prestart_counter++;
             mainText.gameObject.SetActive(false);
-            shareBtn.SetActive(false);
             PreStartGame();
         } else if (gameState == STATE_START)
         {
@@ -180,7 +178,6 @@ public class GameController : MonoBehaviour
         counter = 0;
         gameStartTime = Time.time;
         mainText.gameObject.SetActive(false);
-        shareBtn.SetActive(false);
         scoreText.gameObject.SetActive(true);
         scoreText2.gameObject.SetActive(true);
     }
@@ -202,10 +199,8 @@ public class GameController : MonoBehaviour
         Debug.Log("Game Over");
         gameState = STATE_DEAD;
         mainText.gameObject.SetActive(true);
-        shareBtn.SetActive(true);
-        shareBtn.GetComponent<Button>().interactable = true;
-        shareBtn.GetComponent<Button>().GetComponentInChildren<Text>().text = "Share Score";
         mainText.text = "Game over!!";
+        UploadScore();
     }
 
     public void GameStop()
@@ -235,13 +230,20 @@ public class GameController : MonoBehaviour
 
     public void UploadScore()
     {
-        shareBtn.GetComponent<Button>().interactable = false;
+        string user_id = FBController.getInstance().GetUserId();
+        string username = FBController.getInstance().GetUsername();
+        if (user_id == "")
+        {
+            user_id = "0";
+            username = "Anomynous";
+        }
+
         StartCoroutine(ApiController.getInstance().HttpRequestAsync(
             "score.php",
             new Dictionary<string, string>(){
-                    { "user_id", FBController.getInstance().GetUserId() },
-                    { "score", ""+score },
-                    { "username", FBController.getInstance().GetUsername() }
+                    { "user_id",  user_id},
+                    { "score", "" + score},
+                    { "username",  username}
                 },
             ApiController.TYPE_POST, callback));
     }
@@ -268,12 +270,8 @@ public class GameController : MonoBehaviour
         {
             if(!response.Equals("\"1\""))
             {
-                GameController.getInstance().shareBtn.GetComponent<Button>().interactable = true;
+
                 ToastController.getInstance().SetToast("Share score failed!");
-            }
-            else
-            {
-                GameController.getInstance().shareBtn.GetComponent<Button>().GetComponentInChildren<Text>().text = "Done!";
             }
         }
     }
