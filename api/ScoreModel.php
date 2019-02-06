@@ -43,7 +43,8 @@ class ScoreModel {
         while($query_data = mysqli_fetch_row($result)) {
             array_push($ret, array(
                 'id' => $query_data[0],
-                'user_id' => $query_data[1],
+		'user_id' => $query_data[1],
+		'username' => $query_data[3],
                 'score' => $query_data[2]
             ));
         }
@@ -60,7 +61,8 @@ class ScoreModel {
             while($query_data = mysqli_fetch_row($result)) {
             array_push($ret, array(
                 'id' => $query_data[0],
-                'user_id' => $query_data[1],
+		'user_id' => $query_data[1],
+		'username' => $query_data[3],
                 'score' => $query_data[2]
             ));
         }
