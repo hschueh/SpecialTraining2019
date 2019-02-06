@@ -7,6 +7,7 @@ using System;
 using Facebook.MiniJSON;
 using System.Security.Cryptography;
 using System.Text;
+using GoogleMobileAds.Api;
 
 public class GameController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour
     public static int STATE_PAUSE = 2;
     public static int STATE_DEAD = 3;
     public static int STATE_PRESTART = 4;
+    public static int STATE_SHOWAD = 5;
 
     public static int BULLET_LIMIT = 20;
 
@@ -31,12 +33,15 @@ public class GameController : MonoBehaviour
 
     private int prestart_counter;
     private int counter;
+    private int game_counter;
 
     GameObject projectile;
     GameObject player;
     private ProjectController projectController;
 
     private readonly UploadScoreCallback callback = new UploadScoreCallback();
+
+    private InterstitialAd interstitial;
 
     public static GameController getInstance()
     {
@@ -61,6 +66,7 @@ public class GameController : MonoBehaviour
         score = 0;
         gameState = STATE_STOP;
         gameStartTime = Time.time;
+        game_counter = 0;
 
         if (projectile == null)
             projectile = GameObject.Find("Projectile");
@@ -109,6 +115,9 @@ public class GameController : MonoBehaviour
             else if (gameState == STATE_DEAD)
             {
 
+            } else if (gameState == STATE_SHOWAD)
+            {
+                // do nothing
             }
         }
 
@@ -148,6 +157,9 @@ public class GameController : MonoBehaviour
             // do nothing
             GameDead();
             return;
+        } else if (gameState == STATE_SHOWAD)
+        {
+            ShowAds();
         }
 
     }
@@ -176,10 +188,16 @@ public class GameController : MonoBehaviour
         gameState = STATE_START;
         score = 0;
         counter = 0;
+        game_counter++;
         gameStartTime = Time.time;
         mainText.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(true);
         scoreText2.gameObject.SetActive(true);
+
+        if (interstitial != null)
+        {
+            interstitial.Destroy();
+        }
     }
 
     public void PauseGame()
@@ -201,6 +219,8 @@ public class GameController : MonoBehaviour
         mainText.gameObject.SetActive(true);
         mainText.text = "Game over!!";
         UploadScore();
+
+        RequestInterstitial();
     }
 
     public void GameStop()
@@ -213,9 +233,25 @@ public class GameController : MonoBehaviour
     {
         if (projectController.GetBulletNumber() == 0)
         {
-            gameState = STATE_STOP;
+            if (game_counter % 1 == 0)
+            {
+                gameState = STATE_SHOWAD;
+            }
+            else
+            {
+                gameState = STATE_STOP;
+            }
         }
         mainText.text = "Game over!!";
+    }
+
+    public void ShowAds()
+    {
+        if (this.interstitial.IsLoaded())
+        {
+            this.interstitial.Show();
+        }
+        gameState = STATE_STOP;
     }
 
     public int GetGameState()
@@ -263,6 +299,24 @@ public class GameController : MonoBehaviour
         return Time.time - gameStartTime;
     }
 
+    private void RequestInterstitial()
+    {
+    #if UNITY_ANDROID
+            string adUnitId = "ca-app-pub-2737592620983884/3026211688";
+    #elif UNITY_IPHONE
+            string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+    #else
+            string adUnitId = "unexpected_platform";
+    #endif
+       
+        // Initialize an InterstitialAd.
+        this.interstitial = new InterstitialAd(adUnitId);
+
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the interstitial with the request.
+        this.interstitial.LoadAd(request);
+    }
 
     class UploadScoreCallback : IRequestCallback
     {
