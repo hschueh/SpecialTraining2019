@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>153690396939-ebep0phjkvh2c2743h81du8o3rnq1k16.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.153690396939-ebep0phjkvh2c2743h81du8o3rnq1k16</string>
+	<key>API_KEY</key>
+	<string>AIzaSyACdjoMUqMr8aefksTeV4Ty3Hciw40j2Nk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>153690396939</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.gonnaggstudio.SpecialTraining2019</string>
+	<key>PROJECT_ID</key>
+	<string>specialtraining2019</string>
+	<key>STORAGE_BUCKET</key>
+	<string>specialtraining2019.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:153690396939:ios:88d7f82b3ec4fde0</string>
+	<key>DATABASE_URL</key>
+	<string>https://specialtraining2019.firebaseio.com</string>
+</dict>
+</plist>

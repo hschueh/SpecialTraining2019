@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
     void Update()
     {
         life_counter++;
-        if (GameController.getInstance().GetGameState() == GameController.STATE_PAUSE)
+        if (GameController.getInstance() == null || GameController.getInstance().GetGameState() == GameController.STATE_PAUSE)
         {
             // when pause, do nothing.
             return;

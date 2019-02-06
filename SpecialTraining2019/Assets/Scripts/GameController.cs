@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Facebook.MiniJSON;
 
 public class GameController : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class GameController : MonoBehaviour
     public Text mainText;
     public Text scoreText;
     public Text scoreText2;
+    public GameObject shareBtn;
 
     private int gameState;
     private int score;
@@ -32,6 +34,8 @@ public class GameController : MonoBehaviour
     GameObject projectile;
     GameObject player;
     private ProjectController projectController;
+
+    private readonly UploadScoreCallback callback = new UploadScoreCallback();
 
     public static GameController getInstance()
     {
@@ -66,10 +70,11 @@ public class GameController : MonoBehaviour
 
         projectController = new ProjectController(projectile);
 
+        shareBtn = GameObject.Find("ShareBtn");
+        shareBtn.SetActive(false);
         mainText.text = "Touch screen to start.";
         scoreText.gameObject.SetActive(false);
         scoreText2.gameObject.SetActive(false);
-
     }
 
     // Update is called once per frame
@@ -80,7 +85,7 @@ public class GameController : MonoBehaviour
             GoToMenuScene();
         }
 
-        if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
+        if (Input.GetKey(KeyCode.Space) || (Input.touchCount > 0 && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()))
         {
             if (gameState == STATE_STOP)
             {
@@ -119,6 +124,7 @@ public class GameController : MonoBehaviour
         {
             prestart_counter++;
             mainText.gameObject.SetActive(false);
+            shareBtn.SetActive(false);
             PreStartGame();
         } else if (gameState == STATE_START)
         {
@@ -174,6 +180,7 @@ public class GameController : MonoBehaviour
         counter = 0;
         gameStartTime = Time.time;
         mainText.gameObject.SetActive(false);
+        shareBtn.SetActive(false);
         scoreText.gameObject.SetActive(true);
         scoreText2.gameObject.SetActive(true);
     }
@@ -195,6 +202,9 @@ public class GameController : MonoBehaviour
         Debug.Log("Game Over");
         gameState = STATE_DEAD;
         mainText.gameObject.SetActive(true);
+        shareBtn.SetActive(true);
+        shareBtn.GetComponent<Button>().interactable = true;
+        shareBtn.GetComponent<Button>().GetComponentInChildren<Text>().text = "Share Score";
         mainText.text = "Game over!!";
     }
 
@@ -223,6 +233,20 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
     }
 
+    public void UploadScore()
+    {
+        shareBtn.GetComponent<Button>().interactable = false;
+        StartCoroutine(ApiController.getInstance().HttpRequestAsync(
+            "score.php",
+            ApiController.TYPE_POST, callback,
+            new Dictionary<string, string>(){
+                    { "user_id", FBController.getInstance().GetUserId() },
+                    { "score", ""+score },
+                    { "username", FBController.getInstance().GetUsername() }
+                })
+            );
+    }
+
     public Vector3 getPlayerPos()
     {
         return player.transform.position;
@@ -236,5 +260,22 @@ public class GameController : MonoBehaviour
     public float GetTime()
     {
         return Time.time - gameStartTime;
+    }
+
+
+    class UploadScoreCallback : IRequestCallback
+    {
+        public void OnFinish(string response)
+        {
+            if(!response.Equals("\"1\""))
+            {
+                GameController.getInstance().shareBtn.GetComponent<Button>().interactable = true;
+                ToastController.getInstance().SetToast("Share score failed!");
+            }
+            else
+            {
+                GameController.getInstance().shareBtn.GetComponent<Button>().GetComponentInChildren<Text>().text = "Done!";
+            }
+        }
     }
 }

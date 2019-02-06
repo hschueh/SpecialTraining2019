@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ApiController : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class ApiController : MonoBehaviour
 
     }
 
-    public IEnumerator HttpRequestAsync(string request, int type, IRequestCallback callback)
+    public IEnumerator HttpRequestAsync(string request, int type, IRequestCallback callback, object body = null)
     {
         UnityWebRequest www;
         if (type == TYPE_GET)
@@ -48,16 +49,15 @@ public class ApiController : MonoBehaviour
         }
         else
         {
-            string[] splited = request.Split('?');
-            if (splited.Length != 2)
-                yield break;
-            www = UnityWebRequest.Post("http://54.183.173.15/api/" + splited[0], splited[1]);
+            www = UnityWebRequest.Post("http://54.183.173.15/api/" + request, (Dictionary<string, string>)body);
             yield return www.SendWebRequest();
         }
 
         if (www.isNetworkError || www.isHttpError)
         {
             Debug.Log(www.error);
+            if (callback != null)
+                callback.OnFinish(www.downloadHandler.text);
         }
         else
         {
