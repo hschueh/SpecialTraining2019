@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using GoogleMobileAds.Api;
 
 public class MenuController : MonoBehaviour
 {
@@ -16,9 +17,12 @@ public class MenuController : MonoBehaviour
     {
         //If we don't currently have a game control...
         if (instance == null)
+        {
             //...set this one to be it...
             instance = this;
-        //...otherwise...
+            //...otherwise...
+            initAds();
+        }
         else if (instance != this)
             //...destroy this one because it is a duplicate.
             Destroy(gameObject);
@@ -38,6 +42,19 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    private void initAds()
+    {
+        #if UNITY_ANDROID
+            string appId = "ca-app-pub-2737592620983884~9160375192";
+        #elif UNITY_IPHONE
+            string appId = "ca-app-pub-8550386526282187~1691404125";
+        #else
+            string appId = "unexpected_platform";
+        #endif
+
+        // Initialize the Google Mobile Ads SDK.
+        MobileAds.Initialize(appId);
+    }
 
     public void GoToPlayScene()
     {

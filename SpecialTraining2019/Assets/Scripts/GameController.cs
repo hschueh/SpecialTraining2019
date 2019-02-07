@@ -306,7 +306,7 @@ public class GameController : MonoBehaviour
     #if UNITY_ANDROID
             string adUnitId = "ca-app-pub-2737592620983884/3026211688";
     #elif UNITY_IPHONE
-            string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+            string adUnitId = "ca-app-pub-8550386526282187/3705594880";
     #else
             string adUnitId = "unexpected_platform";
     #endif
