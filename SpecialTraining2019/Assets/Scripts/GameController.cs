@@ -41,8 +41,6 @@ public class GameController : MonoBehaviour
 
     private readonly UploadScoreCallback callback = new UploadScoreCallback();
 
-    private InterstitialAd interstitial;
-
     public static GameController getInstance()
     {
         return instance;
@@ -80,8 +78,6 @@ public class GameController : MonoBehaviour
         mainText.text = "Touch screen to start.";
         scoreText.gameObject.SetActive(false);
         scoreText2.gameObject.SetActive(false);
-
-        RequestInterstitial();
     }
 
     // Update is called once per frame
@@ -195,11 +191,6 @@ public class GameController : MonoBehaviour
         mainText.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(true);
         scoreText2.gameObject.SetActive(true);
-
-        if (interstitial != null)
-        {
-            interstitial.Destroy();
-        }
     }
 
     public void PauseGame()
@@ -247,10 +238,10 @@ public class GameController : MonoBehaviour
 
     public void ShowAds()
     {
-        if (this.interstitial.IsLoaded())
+        InterstitialAd interstitial = InterstitialController.getInstance().GetAd();
+        if (interstitial.IsLoaded())
         {
-            this.interstitial.Show();
-            RequestInterstitial();
+            interstitial.Show();
         }
 
         gameState = STATE_STOP;
@@ -299,25 +290,6 @@ public class GameController : MonoBehaviour
     public float GetTime()
     {
         return Time.time - gameStartTime;
-    }
-
-    private void RequestInterstitial()
-    {
-    #if UNITY_ANDROID
-            string adUnitId = "ca-app-pub-2737592620983884/3026211688";
-    #elif UNITY_IPHONE
-            string adUnitId = "ca-app-pub-8550386526282187/3705594880";
-    #else
-            string adUnitId = "unexpected_platform";
-    #endif
-
-        // Initialize an InterstitialAd.
-        this.interstitial = new InterstitialAd(adUnitId);
-
-        // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
-        // Load the interstitial with the request.
-        this.interstitial.LoadAd(request);
     }
 
     class UploadScoreCallback : IRequestCallback
