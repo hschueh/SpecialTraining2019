@@ -28,9 +28,17 @@ public class MenuController : MonoBehaviour
             Destroy(gameObject);
     }
 
+
+    static Sprite profilePic = null;
     // Start is called before the first frame update
     void Start()
     {
+        if(profilePic != null)
+        {
+            Image image = GameObject.Find("ProfileImg").GetComponent<Image>();
+            image.sprite = profilePic;
+        }
+
     }
 
     // Update is called once per frame
@@ -77,6 +85,8 @@ public class MenuController : MonoBehaviour
     {
         Image image = GameObject.Find("ProfileImg").GetComponent<Image>();
 
-        image.sprite = Sprite.Create((Texture2D)texture, image.sprite.rect, image.sprite.pivot);
+        profilePic = Sprite.Create((Texture2D)texture, image.sprite.rect, image.sprite.pivot);
+
+        image.sprite = profilePic;
     }
 }

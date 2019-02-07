@@ -46,7 +46,7 @@ public class FBController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -63,6 +63,7 @@ public class FBController : MonoBehaviour
             FB.ActivateApp();
             // Continue with Facebook SDK
             // ...
+            LoginToFacebook(false);
         }
         else
         {
@@ -88,17 +89,7 @@ public class FBController : MonoBehaviour
     {
         if (FB.IsLoggedIn)
         {
-            // AccessToken class will have session details
-            var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
-            // Print current access token's User ID
-            Debug.Log("FB userid: " + aToken.UserId);
-            this.userId = aToken.UserId;
-            // Print current access token's granted permissions
-            foreach (string perm in aToken.Permissions)
-            {
-                Debug.Log(perm);
-            }
-            FB.API("me?fields=id,name,picture", HttpMethod.GET, HandleFacebookDelegate);
+            alreadyLoggedIn();
         }
         else
         {
@@ -106,12 +97,40 @@ public class FBController : MonoBehaviour
         }
     }
 
-    public void LoginToFacebook()
+    private void alreadyLoggedIn()
     {
-        // Facebook
-        Debug.Log("Login to FB...");
-        var perms = new List<string>() { };
-        FB.LogInWithReadPermissions(perms, AuthCallback);
+        // AccessToken class will have session details
+        var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
+        // Print current access token's User ID
+        Debug.Log("FB userid: " + aToken.UserId);
+        this.userId = aToken.UserId;
+        // Print current access token's granted permissions
+        foreach (string perm in aToken.Permissions)
+        {
+            Debug.Log(perm);
+        }
+        FB.API("me?fields=id,name,picture", HttpMethod.GET, HandleFacebookDelegate);
+    }
+
+    public void LoginToFacebook(bool popDialog = true)
+    {
+
+        if (FB.IsLoggedIn)
+        {
+            Debug.Log("Already logged in.");
+            alreadyLoggedIn();
+        }
+        else if (popDialog)
+        {
+            // Facebook
+            Debug.Log("Login to FB...");
+            var perms = new List<string>() { };
+            FB.LogInWithReadPermissions(perms, AuthCallback);
+        }
+        else
+        {
+            Debug.Log("Isn't logged in. No need to pop dialog");
+        }
     }
 
     public string GetUserId()
