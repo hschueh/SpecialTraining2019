@@ -47,7 +47,7 @@ public class InputWrapper : MonoBehaviour
         {
             case RuntimePlatform.Android:
             case RuntimePlatform.IPhonePlayer:
-                type = TYPE_MOBILE_FIX_ON_TOUCH;
+                type = TYPE_MOBILE_FIXED_PIVOT;
                 break;
             default:
                 type = TYPE_DESKTOP;

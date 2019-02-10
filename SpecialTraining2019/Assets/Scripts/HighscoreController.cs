@@ -34,6 +34,10 @@ public class HighscoreController : MonoBehaviour
         boardType = TYPE_SELF;
         boardState = STATE_LOADING;
         StartCoroutine(ApiController.getInstance().HttpRequestAsync("score.php", new Dictionary<string, string>(), ApiController.TYPE_GET, callback));
+
+        #if UNITY_ANDROID
+        GameObject.Find("Button").SetActive(false);
+        #endif
     }
 
     // Update is called once per frame
