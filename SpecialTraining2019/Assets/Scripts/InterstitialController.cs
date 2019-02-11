@@ -33,7 +33,8 @@ public class InterstitialController : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(instance);
-        RequestInterstitial();
+        // Sometimes ads will cause ANR. Reduce the work on app started.
+        //RequestInterstitial();
     }
 
     // Use this for initialization
@@ -46,6 +47,12 @@ public class InterstitialController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void LoadAds()
+    {
+        if (interstitial == null)
+            RequestInterstitial();
     }
 
     public InterstitialAd GetAd()

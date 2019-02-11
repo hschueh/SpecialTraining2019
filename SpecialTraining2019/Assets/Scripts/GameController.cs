@@ -78,10 +78,12 @@ public class GameController : MonoBehaviour
         mainText.text = "Touch screen to start.";
         scoreText.gameObject.SetActive(false);
         scoreText2.gameObject.SetActive(false);
+        InterstitialController.getInstance().LoadAds();
 
         #if UNITY_ANDROID
-            GameObject.Find("Button").SetActive(false);
+        GameObject.Find("Button").SetActive(false);
         #endif
+
 
     }
 
